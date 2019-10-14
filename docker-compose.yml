@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  mindoc:
+    image: registry.cn-hangzhou.aliyuncs.com/mindoc/mindoc:v2.0-beta.2
+    ports:
+      - "8181:80"
+    environment:
+      - MINDOC_RUN_MODE=prod
+      - MINDOC_DB_ADAPTER=sqlite3
+      - MINDOC_DB_DATABASE=./database/mindoc.db
+      - MINDOC_CACHE=true
+      - MINDOC_CACHE_PROVIDER=file
+      - MINDOC_ENABLE_EXPORT=ture
+      - MYSQL_INSTANCE_NAME=mindoc
+      - HTTP_PORT=80
+    privileged: true
+    restart: always
+    volumes:
+      - /root/mindoc/database:/mindoc/database
+      - /root/mindoc/uploads:/mindoc/uploads
