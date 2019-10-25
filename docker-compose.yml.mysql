@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+  mindoc:
+    container_name: mindoc
+    image: registry.cn-hangzhou.aliyuncs.com/mindoc/mindoc:v2.0-beta.2
+    ports:
+      - "8181:80"
+    environment:
+      - MINDOC_RUN_MODE=prod
+      - MINDOC_DB_ADAPTER=mysql
+      - MINDOC_DB_HOST=mindoc_db
+      - MINDOC_DB_PORT=3306
+      - MINDOC_DB_USERNAME=root
+      - MINDOC_CACHE=true
+      - MINDOC_CACHE_PROVIDER=file
+      - MINDOC_ENABLE_EXPORT=true
+      - MINDOC_PORT=80
+      - MINDOC_DB_DATABASE=mindoc
+      - MINDOC_DB_PASSWORD=3nvisi0n!
+    privileged: true
+    restart: always
+    volumes:
+      - /root/web_app_mindoc/uploads:/mindoc/uploads
+    depends_on:
+      - db
+    networks:
+      - mindoc
+
+  db:
+    container_name: mindoc_db
+    image: mysql:5.7
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --explicit_defaults_for_timestamp=true
+    restart: always
+    privileged: true
+    environment:
+      - MYSQL_ROOT_PASSWORD=3nvisi0n!
+      - MYSQL_DATABASE=mindoc
+    volumes:
+      - /root/web_app_mindoc/database:/var/lib/mysql
+    networks:
+      - mindoc
+
+networks:
+  mindoc:
